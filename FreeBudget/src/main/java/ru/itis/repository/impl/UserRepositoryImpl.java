@@ -1,5 +1,6 @@
 package ru.itis.repository.impl;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -16,10 +17,11 @@ import java.sql.SQLException;
 import java.util.Objects;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Slf4j
 public class UserRepositoryImpl implements UserRepository {
 
-    private final JdbcTemplate jdbcTemplate = ModuleConfiguration.jdbcTemplate();
+    private final JdbcTemplate jdbcTemplate;
 
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM users WHERE id = ?";
 

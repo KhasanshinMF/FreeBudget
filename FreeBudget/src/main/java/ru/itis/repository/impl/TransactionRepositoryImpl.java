@@ -23,7 +23,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     private static final String SQL_SELECT_BY_ID = "SELECT * FROM transactions WHERE id = ?";
 
-    private static final String SQL_SELECT_BY_USER_ID = "SELECT * FROM transactions WHERE user_id = ?";
+    private static final String SQL_SELECT_BY_USER_ID = "SELECT * FROM transactions WHERE user_id = ? ORDER BY date DESC";
 
     private static final String SQL_SELECT_ALL_INCOMES_BY_USER_ID =
             "SELECT * FROM transactions WHERE user_id = ? AND is_income = TRUE";
@@ -47,7 +47,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
 
     private static final String SQL_SELECT_BY_CATEGORY_ID =
             "SELECT id, user_id, amount, date, is_income, description FROM transactions " +
-                    "JOIN transaction_categories ON id = transaction_id WHERE category_id = ?";
+                    "JOIN transaction_categories ON id = transaction_id WHERE category_id = ? ORDER BY date DESC";
 
     private final TransactionRowMapper transactionRowMapper = new TransactionRowMapper();
 

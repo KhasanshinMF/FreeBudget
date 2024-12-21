@@ -1,5 +1,6 @@
 package ru.itis.servlet;
 
+import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
@@ -13,6 +14,7 @@ import ru.itis.mapper.impl.UserMapperImpl;
 import ru.itis.repository.impl.UserRepositoryImpl;
 import ru.itis.service.UserService;
 import ru.itis.service.impl.UserServiceImpl;
+import ru.itis.util.KeyNames;
 
 import java.io.IOException;
 
@@ -23,7 +25,8 @@ public class SignInServlet extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-        userService = new UserServiceImpl(new UserRepositoryImpl(), new UserMapperImpl());
+        ServletContext context = getServletContext();
+        userService = (UserService) context.getAttribute(KeyNames.USER_SERVICE);
     }
 
     @Override

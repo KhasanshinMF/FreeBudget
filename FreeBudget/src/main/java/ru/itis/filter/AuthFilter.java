@@ -13,10 +13,10 @@ import java.util.List;
 public class AuthFilter implements Filter {
 
     private static final List<String> PROTECTED_URIS = List.of("/main", "/logout");
-    private static final List<String> NOTAUTH_URIS = List.of("/signIn", "/signUp");
+    private static final List<String> NOTAUTH_URIS = List.of("/signIn", "/signUp", "/greeting");
 
-    private static final String PROTECTED_REDIRECT = "/signIn";
-    private static final String NOTAUTH_REDIRECT = "/main";
+    private static final String PROTECTED_REDIRECT = "/greeting";
+    private static final String NOTAUTH_REDIRECT = "/greeting";
 
     public static final String AUTHORIZATION = "authorization";
 
