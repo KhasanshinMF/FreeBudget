@@ -1,20 +1,21 @@
-package ru.itis.model;
+package ru.itis.dto;
 
 import lombok.*;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransactionEntity {
+public class TransactionDtoWithCategories {
 
-    private Long id;
+    private long id;
 
-    private Long userId;
+    private long userId;
 
     private BigDecimal amount;
 
@@ -23,5 +24,7 @@ public class TransactionEntity {
     private boolean isIncome;
 
     private String description;
+
+    private List<CategoryDto> categories;
 
 }

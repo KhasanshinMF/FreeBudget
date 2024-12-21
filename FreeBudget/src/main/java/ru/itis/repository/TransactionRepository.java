@@ -10,18 +10,24 @@ public interface TransactionRepository {
 
     Optional<TransactionEntity> findTransactionById(long id);
 
-    Optional<List<TransactionEntity>> findAllTransactionByUserId(long userId);
+    List<TransactionEntity> findAllTransactionByUserId(long userId);
 
-    Optional<List<TransactionEntity>> findAllIncomesByUserId(long userId);
+    List<TransactionEntity> findAllIncomesByUserId(long userId);
 
-    Optional<List<TransactionEntity>> findAllExpensesByUserId(long userId);
+    List<TransactionEntity> findAllExpensesByUserId(long userId);
 
-    Optional<List<TransactionEntity>> findAllTransactionsByAmount(int startAmount, int endAmount);
+    List<TransactionEntity> findAllTransactionsByAmount(int startAmount, int endAmount);
 
-    Optional<List<TransactionEntity>> findAllTransactionsByDate(Date date);
+    List<TransactionEntity> findAllTransactionsByDate(Date date);
 
-    Optional<List<TransactionEntity>> findAllTransactionsByDateDifference(Date startDate, Date endDate);
+    List<TransactionEntity> findAllTransactionsByDateDifference(Date startDate, Date endDate);
+
+    List<TransactionEntity> findTransactionsByCategoryId(long categoryId);
 
     Optional<TransactionEntity> saveNewTransaction(TransactionEntity transaction);
+
+    boolean updateTransactionById(TransactionEntity transaction, long id);
+
+    boolean deleteTransactionById(long id);
 
 }

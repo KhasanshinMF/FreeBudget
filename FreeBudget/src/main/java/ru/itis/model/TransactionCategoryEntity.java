@@ -7,12 +7,10 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryEntity {
+public class TransactionCategoryEntity {
 
-    private Long id;
+    private Long transactionId;
 
-    private Long userId;
-
-    private String name;
+    private Long categoryId;
 
 }

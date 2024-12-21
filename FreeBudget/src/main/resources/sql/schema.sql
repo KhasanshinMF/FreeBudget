@@ -10,8 +10,9 @@ CREATE TABLE IF NOT EXISTS users
 
 CREATE TABLE IF NOT EXISTS categories
 (
-    id   BIGSERIAL PRIMARY KEY,
-    type VARCHAR(255) NOT NULL
+    id      BIGSERIAL PRIMARY KEY,
+    user_id BIGINT REFERENCES users (id),
+    name    VARCHAR(255) UNIQUE NOT NULL
 );
 
 CREATE TABLE transactions

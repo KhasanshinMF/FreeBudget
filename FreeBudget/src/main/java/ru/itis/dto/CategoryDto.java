@@ -1,4 +1,4 @@
-package ru.itis.model;
+package ru.itis.dto;
 
 import lombok.*;
 
@@ -7,11 +7,11 @@ import lombok.*;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class CategoryEntity {
+public class CategoryDto {
 
-    private Long id;
+    private long id;
 
-    private Long userId;
+    private long userId;
 
     private String name;
 

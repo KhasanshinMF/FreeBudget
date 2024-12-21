@@ -42,7 +42,7 @@ public class SignInServlet extends HttpServlet {
         if (authResponse.getStatus() == 0) {
             HttpSession session = req.getSession(true);
             session.setAttribute(AuthFilter.AUTHORIZATION, true);
-            session.setAttribute("userName", authResponse.getUser().getNickname());
+            session.setAttribute("user", authResponse.getUser());
             resp.sendRedirect("/main");
         } else {
             resp.sendRedirect("/error?err=" + authResponse.getStatusDesc());

@@ -40,6 +40,15 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     private static final String SQL_INSERT =
             "INSERT INTO transactions(user_id, amount, date, is_income, description) VALUES (?, ?, ?, ?, ?)";
 
+    private static final String SQL_DELETE = "DELETE FROM transactions WHERE id = ?";
+
+    private static final String SQL_UPDATE =
+            "UPDATE transactions SET amount = ?, date = ?, is_income = ?, description = ? WHERE id = ?";
+
+    private static final String SQL_SELECT_BY_CATEGORY_ID =
+            "SELECT id, user_id, amount, date, is_income, description FROM transactions " +
+                    "JOIN transaction_categories ON id = transaction_id WHERE category_id = ?";
+
     private final TransactionRowMapper transactionRowMapper = new TransactionRowMapper();
 
     @Override
@@ -53,63 +62,38 @@ public class TransactionRepositoryImpl implements TransactionRepository {
     }
 
     @Override
-    public Optional<List<TransactionEntity>> findAllTransactionByUserId(long userId) {
-        try {
-            return Optional.ofNullable(jdbcTemplate.query(SQL_SELECT_BY_USER_ID,
-                    new Object[] {userId}, transactionRowMapper));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+    public List<TransactionEntity> findAllTransactionByUserId(long userId) {
+        return jdbcTemplate.query(SQL_SELECT_BY_USER_ID, new Object[] {userId}, transactionRowMapper);
     }
 
     @Override
-    public Optional<List<TransactionEntity>> findAllIncomesByUserId(long userId) {
-        try {
-            return Optional.ofNullable(jdbcTemplate.query(SQL_SELECT_ALL_INCOMES_BY_USER_ID,
-                    new Object[] {userId}, transactionRowMapper));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+    public List<TransactionEntity> findAllIncomesByUserId(long userId) {
+        return jdbcTemplate.query(SQL_SELECT_ALL_INCOMES_BY_USER_ID, new Object[] {userId}, transactionRowMapper);
     }
 
     @Override
-    public Optional<List<TransactionEntity>> findAllExpensesByUserId(long userId) {
-        try {
-            return Optional.ofNullable(jdbcTemplate.query(SQL_SELECT_ALL_EXPENSES_BY_USER_ID,
-                    new Object[] {userId}, transactionRowMapper));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+    public List<TransactionEntity> findAllExpensesByUserId(long userId) {
+        return jdbcTemplate.query(SQL_SELECT_ALL_EXPENSES_BY_USER_ID, new Object[] {userId}, transactionRowMapper);
     }
 
     @Override
-    public Optional<List<TransactionEntity>> findAllTransactionsByAmount(int startAmount, int endAmount) {
-        try {
-            return Optional.ofNullable(jdbcTemplate.query(SQL_SELECT_ALL_BY_AMOUNT,
-                    new Object[] {startAmount, endAmount}, transactionRowMapper));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+    public List<TransactionEntity> findAllTransactionsByAmount(int startAmount, int endAmount) {
+        return jdbcTemplate.query(SQL_SELECT_ALL_BY_AMOUNT, new Object[] {startAmount, endAmount}, transactionRowMapper);
     }
 
     @Override
-    public Optional<List<TransactionEntity>> findAllTransactionsByDate(Date date) {
-        try {
-            return Optional.ofNullable(jdbcTemplate.query(SQL_SELECT_ALL_BY_DATE,
-                    new Object[] {date}, transactionRowMapper));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+    public List<TransactionEntity> findAllTransactionsByDate(Date date) {
+        return jdbcTemplate.query(SQL_SELECT_ALL_BY_DATE, new Object[] {date}, transactionRowMapper);
     }
 
     @Override
-    public Optional<List<TransactionEntity>> findAllTransactionsByDateDifference(Date startDate, Date endDate) {
-        try {
-            return Optional.ofNullable(jdbcTemplate.query(SQL_SELECT_ALL_BY_DATE_DIFFERENCE,
-                    new Object[] {startDate, endDate}, transactionRowMapper));
-        } catch (EmptyResultDataAccessException e) {
-            return Optional.empty();
-        }
+    public List<TransactionEntity> findAllTransactionsByDateDifference(Date startDate, Date endDate) {
+        return jdbcTemplate.query(SQL_SELECT_ALL_BY_DATE_DIFFERENCE, new Object[] {startDate, endDate}, transactionRowMapper);
+    }
+
+    @Override
+    public List<TransactionEntity> findTransactionsByCategoryId(long categoryId) {
+        return jdbcTemplate.query(SQL_SELECT_BY_CATEGORY_ID, new Object[] {categoryId}, transactionRowMapper);
     }
 
     @Override
@@ -119,7 +103,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
             jdbcTemplate.update(con -> {
                 PreparedStatement ps = con.prepareStatement(SQL_INSERT, new String[]{"id"});
                 ps.setLong(1, transaction.getUserId());
-                ps.setInt(2, transaction.getAmount());
+                ps.setBigDecimal(2, transaction.getAmount());
                 ps.setDate(3, new java.sql.Date(transaction.getDate().getTime()));
                 ps.setBoolean(4, transaction.isIncome());
                 ps.setString(5, transaction.getDescription());
@@ -132,6 +116,21 @@ public class TransactionRepositoryImpl implements TransactionRepository {
         }
     }
 
+    @Override
+    public boolean updateTransactionById(TransactionEntity transaction, long id) {
+        return jdbcTemplate.update(SQL_UPDATE,
+                transaction.getAmount(),
+                transaction.getDate(),
+                transaction.isIncome(),
+                transaction.getDescription(),
+                id) == 1;
+    }
+
+    @Override
+    public boolean deleteTransactionById(long id) {
+        return jdbcTemplate.update(SQL_DELETE, id) == 1;
+    }
+
     private static final class TransactionRowMapper implements RowMapper<TransactionEntity> {
 
         @Override
@@ -139,6 +138,7 @@ public class TransactionRepositoryImpl implements TransactionRepository {
             return TransactionEntity.builder()
                     .id(rs.getLong("id"))
                     .userId(rs.getLong("user_id"))
+                    .amount(rs.getBigDecimal("amount"))
                     .date(rs.getDate("date"))
                     .isIncome(rs.getBoolean("is_income"))
                     .description(rs.getString("description"))

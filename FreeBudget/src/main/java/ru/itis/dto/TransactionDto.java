@@ -1,4 +1,4 @@
-package ru.itis.model;
+package ru.itis.dto;
 
 import lombok.*;
 
@@ -10,11 +10,11 @@ import java.util.Date;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class TransactionEntity {
+public class TransactionDto {
 
-    private Long id;
+    private long id;
 
-    private Long userId;
+    private long userId;
 
     private BigDecimal amount;
 
